@@ -1,0 +1,411 @@
+.excel-app {
+    
+  -webkit-touch-callout: none; 
+
+  -webkit-user-select: none;   
+
+  -khtml-user-select: none;    
+
+  -moz-user-select: none;      
+
+  -ms-user-select: none;       
+
+   user-select: none;          
+ 
+   display:flex;
+ 
+   flex-direction:column;
+ 
+   width:100%;
+ 
+   height:100%;
+
+}
+
+
+.footer-panel{
+
+  background-color: whitesmoke;  
+
+  flex:1;
+  
+  min-height:30px;
+
+  max-height:30px;
+
+  display:flex;
+
+  flex-direction:row;
+  
+
+}
+
+.left-bar{
+
+  flex:1;
+
+  display:flex;
+
+  flex-direction:row;
+
+  color:#2A4242;
+
+  align-items:center; 
+
+}
+
+.first-left-bar-icon{
+
+
+ padding-left:20px;  
+ 
+ cursor:pointer;
+
+
+}
+
+.left-bar-icon{
+
+
+ padding-left:10px;  
+ 
+ cursor:pointer;
+
+
+}
+
+
+.right-bar{
+
+  flex:1;
+
+  display:flex;
+
+  flex-direction:row;
+
+  color:#2A4242;
+
+  align-items:center;  
+
+  justify-content:right;  
+
+}
+
+.right-bar-icon{
+
+
+ padding-right:10px;  
+
+  padding-left:10px; 
+ 
+ cursor:pointer;
+
+
+}
+
+.last-right-bar-icon{
+
+
+ padding-right:20px;  
+
+ padding-left:10px; 
+ 
+ /* cursor:pointer; */
+
+
+}
+
+
+.right-bar-scale{
+
+
+  min-width:100px;
+ 
+  max-width:100px;
+
+  border-top: 1px solid;
+
+  /* height:1px; */
+
+  /* padding-right:10px;   */
+  
+
+}
+
+
+.main-space-wrapper {
+
+  background-color: white;  
+
+  flex:1;
+
+  display:flex;
+
+  flex-direction:row;
+
+  overflow:hidden;
+
+}
+
+
+.excel-main-space {
+
+  background-color: white;  
+
+  flex:1;
+
+  display:flex;
+
+  overflow:hidden;
+
+}
+
+
+.epura-list-title {
+
+  white-space:nowrap;
+
+  min-height:40px;
+
+  max-height:40px;
+
+  line-height: 40px;
+
+  font-family:Calibri;
+
+  font-weight: 300;
+
+  font-size:22px;
+  
+  text-align:center;
+
+  border-bottom:0.5px solid lightgray;
+
+}
+
+
+.object-properties-title {
+
+  white-space:nowrap;
+
+  min-height:40px;
+
+  max-height:40px;
+
+  line-height: 40px;
+
+  font-family:Calibri;
+
+  font-weight: 300;
+
+  font-size:22px;
+  
+  text-align:center;
+
+  border-bottom:0.5px solid lightgray;
+
+}
+
+
+.elist-item {
+
+  white-space:nowrap;
+
+  min-height:24px; 
+
+  max-height:24px; 
+
+  line-height: 24px;
+
+  font-family:Calibri;
+
+  font-weight: 300;
+
+  font-size:18px;
+
+  margin-left:5px;
+
+  color:black;
+
+  cursor:pointer;
+  
+  
+}
+
+.elist-item-selected {
+
+  white-space:nowrap;
+
+  min-height:24px; 
+
+  max-height:24px; 
+
+  line-height: 24px;
+
+  font-family:Calibri;
+
+  font-weight: 300;
+
+  font-size:18px;
+
+  margin-left:5px;
+
+  background-color:cyan;
+  
+  
+}
+
+
+
+.object-properties-body {
+
+  flex:1;
+
+  padding-top:15px;
+
+  padding-left:10px;
+
+  
+}
+
+
+.epura-list-body {
+
+  flex:1;
+
+  padding-top:15px;
+
+  padding-left:10px;
+
+  background-color:white;
+
+  overflow-y:auto;
+
+  overflow-x:hidden;
+
+}
+
+
+.main-divider {
+
+  background-color: lightblue;  
+
+  min-width:4px;
+
+  max-width:4px;
+
+  cursor:col-resize;
+
+
+}
+
+
+.object-properties-group-title {
+
+  margin-bottom:15px;
+
+}
+
+.object-properties-group {
+
+  margin-bottom:25px;
+
+}
+
+
+.epura-list {
+
+  background-color: whitesmoke;  
+
+  min-width:400px;
+
+  max-width:400px;
+
+  flex:1;
+
+  display:flex;
+
+  flex-direction:column;
+
+  overflow:hidden;
+
+}
+
+
+.object-properties {
+
+  background-color: whitesmoke;  
+
+  min-width:400px;
+
+  max-width:400px;
+
+  flex:1;
+
+  display:flex;
+
+  flex-direction:column;
+
+  overflow:hidden;
+
+
+
+}
+
+.object-properties-input{
+
+  margin-bottom:12px;
+
+}
+
+.object-properties-select{
+
+  margin-bottom:12px;
+
+}
+
+
+.object-properties-checkbox{
+
+  margin-bottom:12px;
+
+}
+
+.object-properties-select>label>select {
+  margin-left: 10px;
+  width:50%;
+}
+
+.object-properties-input>label>input {
+  margin-left: 10px;
+  width:50%;
+}
+
+.object-properties-input>label {
+
+  display:inline-block; 
+  width:100%;
+
+}
+
+.object-properties-select>label {
+
+  display:inline-block; 
+  width:100%;
+
+}
+
+
+.object-properties-checkbox>label {
+
+  display:inline-block; 
+  width:100%;
+
+}
+
+.object-properties-checkbox>label>input {
+
+  vertical-align:middle; 
+
+
+}
