@@ -4,9 +4,21 @@ import './popup-menu.css'
 export class popup_menu {
 
 
-    toggle_active (e) {
+    toggle_active (e, mode) {
+
+      
 
        let menu = this.frame.querySelector('.menu-popup-context-menu');
+
+       if (mode&&mode==='merge') {
+
+          menu.innerHTML = `<div  data-action='merge' class="menu-popup-context-menu-item">Объединить ячейки</div>`
+
+       } else if (mode&&mode ==='add') {
+
+         menu.innerHTML = `<div  data-action='add' class="menu-popup-context-menu-item">Добавить диаграмму</div>`
+
+       }
 
        menu.style.left = e.x + 'px';
 
@@ -26,25 +38,52 @@ export class popup_menu {
 
         this.frame.classList.add('menu-popup');
 
-        this.frame.onclick = (e) => { this.toggle_active(e);}
+        this.frame.onclick = (e) => {
+        
+          
+          
+          this.toggle_active(e);
+        
+          if (e.target.classList.contains('menu-popup-context-menu-item')) {
 
-        this.frame.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); this.toggle_active(e); this.toggle_active(e); }
+
+             const menuEvent =  {
+               evt:'menuEvent', 
+                detail: {
+      
+                  what:e.target.dataset.action
+
+                },
+              };
+
+
+              this.app.notify(menuEvent);
+
+
+
+          }
+
+        
+        }
+
+        this.frame.oncontextmenu = (e) => { this.toggle_active(e); let el = document.elementFromPoint(e.x,e.y); el.oncontextmenu(e);/*e.preventDefault(); e.stopPropagation(); this.toggle_active(e); this.toggle_active(e);*/ }
 
         this.frame.innerHTML = `
         
           <div class = 'menu-popup-wrapper'></div>
-          <div class="menu-popup-context-menu">
 
-              <div  data-action='copy' class="menu-popup-context-menu-item">Добавить подложку</div>
-    
-              <div  data-action='copy' class="menu-popup-context-menu-item">Добавить диаграмму</div>
-    
-              <div  data-action='copy' class="menu-popup-context-menu-item">Добавить таблицу</div>
+          <div class="menu-popup-context-menu">
 
           </div>
 
-
         `
+
+
+        //  <div  data-action='copy' class="menu-popup-context-menu-item">Добавить подложку</div>
+    
+        //       <div  data-action='copy' class="menu-popup-context-menu-item">Добавить диаграмму</div>
+    
+        //       <div  data-action='copy' class="menu-popup-context-menu-item">Добавить таблицу</div>
 
        insertion_point.appendChild(this.frame);
 

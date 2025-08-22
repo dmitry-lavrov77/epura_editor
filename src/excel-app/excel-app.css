@@ -296,6 +296,8 @@
 
   cursor:col-resize;
 
+  position:relative
+
 
 }
 
@@ -310,7 +312,60 @@
 
   margin-bottom:25px;
 
+  position:relative;
+
 }
+
+   .divider-switch-left {
+
+    width: 36px;
+   
+    height: 36px;
+   
+    background: url("img/angle_left2.svg") center center no-repeat;
+   
+    position: absolute;
+   
+    top: calc(45% - 18px);
+   
+    right: -18px;
+   
+    z-index: 1;
+   
+    cursor: pointer;
+   
+    /* transition: left 0.8s, top 0.8s, background .8s; */
+
+   }
+
+
+   .divider-switch-right {
+
+    width: 36px;
+   
+    height: 36px;
+   
+    /* background: url("img/on-off_btn.svg") center center no-repeat; */
+
+     background: url('img/angle_right2.svg') center center no-repeat;
+   
+    position: absolute;
+   
+    top: calc(45% - 18px);
+   
+    right: -18px;
+   
+    z-index: 1;
+   
+    cursor: pointer;
+   
+    /* transition: left 0.8s, top 0.8s, background .8s; */
+
+    
+   
+  }
+
+
 
 
 .epura-list {
@@ -355,12 +410,14 @@
 .object-properties-input{
 
   margin-bottom:12px;
+ 
 
 }
 
 .object-properties-select{
 
   margin-bottom:12px;
+  
 
 }
 
@@ -368,22 +425,14 @@
 .object-properties-checkbox{
 
   margin-bottom:12px;
+  
 
 }
 
-.object-properties-select>label>select {
-  margin-left: 10px;
-  width:50%;
-}
-
-.object-properties-input>label>input {
-  margin-left: 10px;
-  width:50%;
-}
 
 .object-properties-input>label {
 
-  display:inline-block; 
+  /* display:inline-block;  */
   width:100%;
 
 }
@@ -392,6 +441,7 @@
 
   display:inline-block; 
   width:100%;
+
 
 }
 
@@ -406,6 +456,22 @@
 .object-properties-checkbox>label>input {
 
   vertical-align:middle; 
+  position:absolute;
+  left:120px;
 
 
+}
+
+.object-properties-select>label>select {
+  margin-left: 10px;
+  width:50%;
+  position:absolute;
+  left:120px;
+}
+
+.object-properties-input>label>input {
+  margin-left: 10px;
+  width:50%;
+  position:absolute;
+  left:120px;
 }

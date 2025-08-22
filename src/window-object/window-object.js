@@ -74,24 +74,35 @@ export class window_object{
         else if (this.action === 'resize-east') {
 
              let new_width = this.action_start.width0 + e.x - this.action_start.x0;
+
+             if (!this.resizeing('resize-east', {width:new_width})) {this.after_resizeing(); return;}
+             
             
              this.frame.style.minWidth =  new_width + 'px';
 
              this.frame.style.maxWidth =  new_width + 'px';
 
-              this.resizeing();
+
+this.after_resizeing();
+
+
+
+             //this.resizeing();
              
         }
 
         else if (this.action === 'resize-south') {
 
              let new_height = this.action_start.height0 + e.y - this.action_start.y0;
+
+
+             if (!this.resizeing('resize-south', {height:new_height})) {this.after_resizeing(); return;}
             
              this.frame.style.minHeight =  new_height + 'px';
 
              this.frame.style.maxHeight =  new_height + 'px';
 
-             this.resizeing();
+            this.after_resizeing();
              
         }
 
@@ -112,13 +123,17 @@ export class window_object{
              
              }
 
+             if (!this.resizeing('resize-west', {left:new_left, width:new_width})) {this.after_resizeing(); return;}
+
              this.frame.style.left = new_left + 'px';
              
              this.frame.style.minWidth =  new_width + 'px';
 
              this.frame.style.maxWidth =  new_width + 'px';
 
-             this.resizeing();
+             this.after_resizeing();
+
+            
              
              
         }
@@ -139,13 +154,17 @@ export class window_object{
              
              }
 
+             if (!this.resizeing('resize-north', {top:new_top, height:new_height})) {this.after_resizeing(); return;}
+
              this.frame.style.top = new_top + 'px';
              
              this.frame.style.minHeight =  new_height + 'px';
 
              this.frame.style.maxHeight =  new_height + 'px';
 
-             this.resizeing();
+             this.after_resizeing();
+
+             
              
              
         }
@@ -203,7 +222,7 @@ export class window_object{
 
         this.head.style.right = '0px';
 
-        this.head.style.backgroundColor  = '#d3e3fd';
+        this.head.style.backgroundColor  = 'rgb(211, 227, 253, 0.6)' //'#d3e3fd';
 
         this.head.style.borderLeft ='1px solid gray'
 
@@ -228,7 +247,7 @@ export class window_object{
 
         this.handle_left.style.bottom = '3px';
 
-        this.handle_left.style.backgroundColor  = 'white';
+        this.handle_left.style.backgroundColor  = 'transparent';
 
         this.handle_left.style.cursor  = 'col-resize';
 
@@ -250,7 +269,7 @@ export class window_object{
 
         this.handle_right.style.bottom = '3px';
 
-        this.handle_right.style.backgroundColor  = 'white';
+        this.handle_right.style.backgroundColor  = 'transparent';
 
         this.handle_right.style.borderRight ='1px solid gray'
 
@@ -273,7 +292,7 @@ export class window_object{
 
         this.handle_bottom.style.borderBottom ='1px solid gray'
 
-        this.handle_bottom.style.backgroundColor  = 'white';
+        this.handle_bottom.style.backgroundColor  = 'transparent';
 
         this.handle_bottom.style.cursor  = 'row-resize';
 
@@ -296,11 +315,15 @@ export class window_object{
 
         this.handle_top.style.borderTop ='1px solid gray'
 
-        this.handle_top.style.backgroundColor  = '#d3e3fd';
+       // this.handle_top.style.backgroundColor  = '#d3e3fd';
 
-        this.handle_top.style.cursor  = 'row-resize';
+       this.handle_top.style.backgroundColor  = 'transparent';
 
-        this.set_action(this.handle_top,'resize-north')
+      
+       this.handle_top.style.cursor  = 'row-resize';
+
+       
+       this.set_action(this.handle_top,'resize-north')
 
 
 
@@ -368,7 +391,7 @@ export class window_object{
 
         this.handle_sw.style.borderBottom ='1px solid gray'
 
-        this.handle_sw.style.backgroundColor  = 'white';
+        this.handle_sw.style.backgroundColor  = 'transparent';
 
         this.handle_sw.style.cursor  = 'nesw-resize';
 
@@ -393,7 +416,7 @@ export class window_object{
 
         this.handle_se.style.borderBottom ='1px solid gray'
 
-        this.handle_se.style.backgroundColor  = 'white';
+        this.handle_se.style.backgroundColor  = 'transparent';
 
         this.handle_se.style.cursor  = 'nwse-resize';
 
@@ -527,7 +550,9 @@ if (file) {
 
       this.stop = (left, top, width, height) =>{}
 
-      this.resizeing = () =>{};
+      this.resizeing = (dir, new_size) =>{return true};
+
+      this.after_resizeing = () =>{return true};
 
     }
 

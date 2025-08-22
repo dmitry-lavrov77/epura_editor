@@ -1,0 +1,11 @@
+.multicell{
+
+     box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+     background-color:white;
+     white-space :nowrap;
+     display:flex;
+     align-items: end;
+
+}

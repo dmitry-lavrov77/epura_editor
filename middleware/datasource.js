@@ -27,6 +27,9 @@ async get_diagram_list () {
       let result = await response.json();
 
 
+      console.log(result);
+
+
       return result;
   
 
@@ -129,7 +132,36 @@ async get_plot_line () {
 }
 
 
+ async get_epura_table (eid, dates) {
 
+
+     let response = await fetch('https://31.44.94.234:38435/api/kia_data/epuratabledata', {
+
+        method: 'POST',
+        
+         headers: {
+          'x-access-token':this.token,
+          'Content-Type': 'application/json'
+         },
+
+          body:'['+eid+', "'+dates+'"]',
+
+       });
+
+      let result = await response.json();
+
+
+   
+    
+
+
+      return result;
+
+
+
+
+
+ }
   
  async get_epura_data (eid, dates) {
 
@@ -148,6 +180,8 @@ async get_plot_line () {
        });
 
       let result = await response.json();
+
+      //console.log(result)
 
 
    

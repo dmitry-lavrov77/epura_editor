@@ -35,6 +35,8 @@ export class picture_object{
 
     load_file (contents) {
 
+      this.lfle = contents;
+
       let body = this.wo.frame.querySelector('.window-body');
 
       body.innerHTML =  contents;
@@ -187,12 +189,12 @@ export class picture_object{
 
      if (this.link) this.draw_link_curve (this.link.wo.left,this.link.wo.top,this.link.wo.width, this.link.wo.height);
 
+     if (this.lfle) this.load_file(this.lfle)
+
 
     }
 
      draw_link_curve (left, top, width, height) {
-
-      //console.log('draw');
 
       if (this.link&&this.wo.frame&&this.link.wo.frame) {
 
@@ -231,11 +233,11 @@ export class picture_object{
 
         this.link.wo.moveing = (left,top,width,height) => this.draw_link_curve (left,top,width,height);
 
-        console.log('1111', this.link.wo)
-
         this.link.wo.frame.style.zIndex = '500'
 
         this.draw_link_curve (this.link.wo.left,this.link.wo.top,this.link.wo.width, this.link.wo.height)
+
+        this.link.wo.after_resizeing = () =>{this.draw_link_curve()}
 
 
      }
@@ -263,17 +265,19 @@ export class picture_object{
   
      stop_all (left, top, width, height) {
 
-
        if (!this.link) return;
 
         this.link.wo.left = parseFloat(this.link.wo.frame.style.left); 
 
         this.link.wo.top = parseFloat(this.link.wo.frame.style.top); 
+
+       
+
         
-        this.link.wo.resizeing = () => this.draw_link_curve();
+        // this.link.wo.resizeing = (dir, new_size) => {//this.draw_link_curve(); 
+        // this.link.resizeing(dir, new_size)}
 
-        this.draw_link_curve ()
-
+        this.draw_link_curve();
 
      }
 
@@ -282,6 +286,8 @@ export class picture_object{
   
   
      constructor(app, sheet) {
+
+       this.lfle = null; 
 
        this.app = app;
        
@@ -297,7 +303,7 @@ export class picture_object{
 
        this.wo.stop = (left, top, width, height) => this.stop_all(left, top, width, height);
 
-       this.wo.resizeing = () => this.draw_link_curve();
+       this.wo.resizeing = (dir, new_size) => {this.draw_link_curve(); return true;}
 
        
 

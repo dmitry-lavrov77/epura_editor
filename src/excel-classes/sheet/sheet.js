@@ -5,6 +5,8 @@ import {picture_object} from '../../picture-object/picture-object'
 
 import {diagram_object} from '../../diagram-object/diagram-object'
 
+import {multicell} from '../multicell/multicell'
+
 import {cell} from '../cell/cell'
 
 
@@ -48,6 +50,8 @@ export class column {
   
   render () {
 
+     
+
      this.frame = document.createElement('div');
 
 
@@ -67,6 +71,8 @@ export class column {
      for (let i =0; i<this.sheet.rows.length-1;i++) {
 
         let cll = new cell(this.app, this.sheet, this, i);
+
+        this.app.subscribe(cll);
 
         this.sheet.rows[i].add_cell(cll);
 
@@ -109,9 +115,9 @@ export class sheet {
 
      e.target.setPointerCapture(e.pointerId);
 
-     if (this.selected_object) {
+     if (this.app.selected_object) {
         
-        this.selected_object.deselect();  
+        this.app.selected_object.deselect();  
 
         this.selected_multiple =[];
 
@@ -128,6 +134,26 @@ export class sheet {
 
    perform(e){
 
+    const resizeRCEvent =  {
+      evt:'resizeRCEvent', 
+      detail: {
+      what: this.action.type,
+      num: this.action.num,
+      sze:''
+     },
+    };
+
+   //const pizzaEvent = new CustomEvent("pizzaDelivery", {
+   //detail: {
+    //name: "supreme",
+   //},
+   //});
+
+   //window.addEventListener("pizzaDelivery", (e) => console.log(e.detail.name));
+   //window.dispatchEvent(pizzaEvent); 
+
+
+
     if (this.action.type==='col'){
 
        let new_size =  this.action.start_size + e.x - this.action_start.x0;
@@ -143,6 +169,13 @@ export class sheet {
        this.columns[this.action.num].frame.style.minWidth = new_size + 'px'
 
        this.columns[this.action.num].frame.style.maxWidth = new_size + 'px'
+
+       resizeRCEvent.detail.sze = new_size;
+
+       this.app.notify(resizeRCEvent);
+
+       //window.dispatchEvent(new_size); 
+
 
     } else if (this.action.type==='row') {
 
@@ -166,6 +199,11 @@ export class sheet {
 
        }
 
+       resizeRCEvent.detail.sze = new_size;
+
+       this.app.notify(resizeRCEvent);
+       //window.dispatchEvent(new_size); 
+
     }
 
    }
@@ -174,7 +212,17 @@ export class sheet {
      
      e.target.releasePointerCapture(e.pointerId); 
 
-     if (this.action.type==='col'){
+     const stopResizeRCEvent =  {
+      evt:'stopResizeRCEvent', 
+      detail: {
+      what: this.action.type,
+      num: this.action.num,
+     },
+    };
+
+    this.app.notify(stopResizeRCEvent);
+
+   /*  if (this.action.type==='col'){
 
         for  (let i=0;i<this.rows.length-1;i++) {
          
@@ -184,7 +232,7 @@ export class sheet {
 
         }    
 
-     }
+     }*/
 
      this.action = {};
 
@@ -192,6 +240,197 @@ export class sheet {
 
 
    }
+
+   update(data){
+
+      if (data.evt==='propertyChanged') {
+
+        if (data.what==='sheet_name') {
+
+          console.log('names', this.app.selected_sheet_title,this.title,data.value)
+
+          this.title = data.value;
+
+          this.app.selected_sheet_title.innerHTML = data.value;
+          
+
+        } 
+
+        if (data.what==='grid_visibility') {
+
+
+
+
+             this.grid_visibility = data.value;
+
+             for (let i =0; i<this.rows.length-1;i++) {
+                
+                for (let j =0; j<this.columns.length-1;j++) {
+
+                 // console.log(this.rows[i].cells[j]) 
+                  
+                  this.rows[i].cells[j].render();
+                }
+
+             }
+
+            
+
+             //this.render();
+  
+        }
+
+
+      }
+
+      if (data.evt==='menuEvent') {
+
+
+         if (data.detail.what==='add') {
+
+         
+          if (!this.frame) return;
+
+          let menu = this.app.popup_menu.frame.querySelector('.menu-popup-context-menu');
+
+          console.log(menu.style.left)
+
+
+          
+
+          this.diags.push(new diagram_object(this.app, this));
+
+
+          this.pictures.push(new picture_object(this.app, this));
+
+
+   
+
+           let doo = this.diags[this.diags.length-1];
+
+           
+           
+
+           doo.first_render = true;
+
+         
+
+           let po = this.pictures[this.pictures.length-1];
+
+           
+           
+           doo.render();
+
+           
+           let rr = doo.wo.frame.parentNode.getBoundingClientRect();
+           
+
+
+
+
+           po.add_link(doo);
+         
+           po.render();
+
+
+           po.wo.left = parseFloat(menu.style.left) - rr.left;
+         
+           po.wo.frame.style.left = parseFloat(menu.style.left) - rr.left +'px'
+
+           po.wo.top = parseFloat(menu.style.top) - rr.top
+         
+           po.wo.frame.style.top = parseFloat(menu.style.top) -rr.top +'px'
+
+
+
+          
+
+           doo.wo.left = parseFloat(menu.style.left) - rr.left+300;
+         
+           doo.wo.frame.style.left = parseFloat(menu.style.left) -rr.left +300+'px'
+
+           doo.wo.top = parseFloat(menu.style.top) - rr.top +200
+         
+           doo.wo.frame.style.top = parseFloat(menu.style.top) -rr.top +200+'px'
+
+
+           po.draw_link_curve();
+
+
+
+
+         }
+
+
+         if (data.detail.what==='merge'&&this.selected_multiple&&this.selected_multiple.length) {
+
+            let row_start = this.selected_multiple[0].num;
+
+            let row_end = this.selected_multiple[0].num;
+
+            let column_start = this.selected_multiple[0].column.num;
+
+            let column_end = this.selected_multiple[0].column.num;
+
+            let value = '';
+            
+            for (let i=0;i<this.selected_multiple.length;i++) {
+
+               if (this.selected_multiple[i].value.trim()!=='') {
+
+                  if (value!=='') {
+
+                     alert('В объединяемом диапазоне не может быть более одного значения!');
+
+                     return;
+
+                  }
+
+                  value = this.selected_multiple[i].value.trim();
+
+               }
+
+            }
+            
+            for (let i=0;i<this.selected_multiple.length;i++) {
+
+               if (this.selected_multiple[i].num<row_start) row_start = this.selected_multiple[i].num;
+
+               if (this.selected_multiple[i].num>row_end) row_end = this.selected_multiple[i].num;
+
+               if (this.selected_multiple[i].column.num<column_start) column_start = this.selected_multiple[i].column.num;
+
+               if (this.selected_multiple[i].num>column_end) column_end = this.selected_multiple[i].column.num;
+
+               this.selected_multiple[i].in_multiple = false;
+
+               this.selected_multiple[i].render();
+
+            }
+
+            this.selected_multiple = [];
+               
+            this.multicells.push(new multicell(this.app, this, row_start,row_end ,column_start,column_end));
+
+            this.multicells[this.multicells.length-1].value = value;
+            
+            this.multicells[this.multicells.length-1].render();
+
+            this.multicells[this.multicells.length-1].select();
+
+
+
+         }
+        
+         //console.log(this.selected_multiple)
+
+
+      }
+
+
+   }
+
+   deselect () {}
 
    render() {
 
@@ -231,6 +470,17 @@ export class sheet {
      let col_header = document.createElement('div');
 
      col_header.classList.add('col-header');
+
+
+     col_header.onclick = () =>{
+
+      if (this.app.selected_object) this.app.selected_object.deselect();
+
+      this.app.selected_object = this;
+
+      this.app.object_properties.render('sheet');
+
+     }
 
      
 
@@ -293,7 +543,23 @@ export class sheet {
 
      let row_header = document.createElement('div');
 
-     row_header.classList.add('row-header');
+      row_header.classList.add('row-header');
+
+      row_header.onclick = () =>{
+
+
+         
+      if (this.app.selected_object) this.app.selected_object.deselect();
+
+      this.app.selected_object = this;
+
+
+
+      this.app.object_properties.render('sheet');
+
+
+
+      }
 
 
       for (let i=0; i<this.rows.length;i++){
@@ -412,35 +678,32 @@ export class sheet {
 
         this.connections_layer.style.zIndex = '1000'
   
-        
          sh.appendChild(this.connections_layer);
 
+         console.log(this);
 
-        let doo = this.diags[0];
+        // console.log(this.diags)
 
+         /*let doo = this.diags[0];
 
+         doo.first_render = true;
 
-        let po = this.pictures[0];
+         console.log('doo', doo)
 
-
-      
-
-
+         let po = this.pictures[0];
 
          doo.render();
          
          po.add_link(doo);
-
          
-         po.render();
-
+         po.render();*/
     
    }
 
     select_multiple (cc) {
 
 
-       if ( this.select_cells_multiple&&this.selected_object) {
+       if ( this.select_cells_multiple&&this.app.selected_object) {
 
         for (let i=0;i<this.selected_multiple.length;i++) {
             this.selected_multiple[i].in_multiple = false;
@@ -449,13 +712,13 @@ export class sheet {
         
         this.selected_multiple =[];
 
-         let min_x = Math.min(parseFloat(this.selected_object.column.num), parseFloat(cc.column.num));
+         let min_x = Math.min(parseFloat(this.app.selected_object.column.num), parseFloat(cc.column.num));
          
-         let max_x = Math.max(parseFloat(this.selected_object.column.num), parseFloat(cc.column.num));
+         let max_x = Math.max(parseFloat(this.app.selected_object.column.num), parseFloat(cc.column.num));
          
-         let min_y = Math.min(parseFloat(this.selected_object.num), parseFloat(cc.num));
+         let min_y = Math.min(parseFloat(this.app.selected_object.num), parseFloat(cc.num));
          
-         let max_y = Math.max(parseFloat(this.selected_object.num), parseFloat(cc.num));
+         let max_y = Math.max(parseFloat(this.app.selected_object.num), parseFloat(cc.num));
    
    
 
@@ -502,20 +765,28 @@ export class sheet {
 
     select (obj) {
 
-       for (let i=0;i<this.selected_multiple.length;i++) {
-            this.selected_multiple[i].in_multiple = false;
-            this.selected_multiple[i].render();
-        }     
+      
+      if (obj === this.app.selected_object) return;
+      
+      
+      for (let i=0;i<this.selected_multiple.length;i++) {
+    
+           this.selected_multiple[i].in_multiple = false;
+      
+           this.selected_multiple[i].render();
+      
+       }     
  
 
 
-       if (this.selected_object) this.selected_object.deselect();  
+       if (this.app.selected_object) this.app.selected_object.deselect();  
        
        this.selected_multiple =[];
 
-       this.selected_object = obj;
+       this.app.selected_object = obj;
 
-       this.selected_object.select();
+
+       this.app.selected_object.select();
        
        if (obj.label&&obj.label==='cell') {
 
@@ -523,13 +794,22 @@ export class sheet {
         
         window.addEventListener("mouseup", (e)=>this.stop_cells_multiple(), { once: true });
 
-       } 
+       } else  this.select_cells_multiple = false;
+
+       if (obj.label&&obj.label==='diagram') {
+
+         // console.log('diagram');
+
+       }
 
     }
 
     
     constructor (title, excel_app, visible = true) {    
 
+        console.log('subscribing sheet')
+
+        
 
         this.measure_text = document.createElement('div');
 
@@ -537,13 +817,14 @@ export class sheet {
 
         this.diags = [];
 
+        this.multicells = [];
+
+        this.grid_visibility = true;
+
 
         ///////////////////////////////////////
 
-         this.diags.push(new diagram_object(this.app, this));
-
-
-         this.pictures.push(new picture_object(this.app, this));
+       
 
 
          //let po = new picture_object(this.app, this);
@@ -574,17 +855,21 @@ export class sheet {
 
         this.columns = [];
 
+        
+
         this.rows = [];
 
         this.action = {}; 
 
         this.action_start = {x0:0, y0:0}
 
-        this.selected_object = null;
+        this.app.selected_object = null;
 
         this.select_cells_multiple = false;
 
         this.selected_multiple =[];
+
+        this.cscale = 1;
 
         for (let i=0; i<this.app.row_names.length;i++){
 
@@ -603,9 +888,19 @@ export class sheet {
         }
 
 
-         
-       
+        excel_app.subscribe(this);
 
+         
+         //this.diags.push(new diagram_object(this.app, this));
+
+
+         //this.pictures.push(new picture_object(this.app, this));
+
+          
+         
+        // this.multicells.push(new multicell(this.app, this, 1,5,2,7));
+
+        
        // this.memoized_frame = frame.outerHTML;   
 
 

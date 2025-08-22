@@ -64,6 +64,12 @@ class footer_panel {
 
      this.selected_sheet_title = document.createElement('div');
 
+     this.selected_sheet_title.style.paddingLeft = '10px' 
+
+     this.selected_sheet_title.style.color = 'green'
+
+     this.selected_sheet_title.style.fontWeight = '700'
+
      this.size_down = document.createElement('div');
 
      this.size_down.classList.add('right-bar-icon');
@@ -122,8 +128,6 @@ class excel_main_space {
 
    this.frame = document.createElement('div');
 
- 
- 
    this.frame.classList.add('excel-main-space');
 
  } 
@@ -134,28 +138,120 @@ class excel_main_space {
 
 class object_properties_input {
 
-  constructor(app, label, type='text'){
+
+  constructor(app, label, what, type='text', extra_span = {on:false}, value = '') { 
+
+      this.app = app; 
 
       this.frame = document.createElement('div');
  
       this.frame.classList.add('object-properties-input');
 
-      this.frame.innerHTML = `<label>${label}<input type="${type}" /></label>`
+      this.frame.innerHTML = `<label>${label}<input class="${what}" type="${type}" value="${value}"/><span>${extra_span.txt}</span></label>`
+
+      this.sp = this.frame.querySelector('span');
+
+      this.sp.style.display = (extra_span.on)?'':'none' 
+
+      this.sp.style.cursor = 'pointer'
+
+      this.sp.style.color = 'blue'
+
+      if (extra_span.span_click)  this.sp.onclick = () =>{
+        
+        
+         let s = this.frame.querySelector('input');
+
+        
+
+
+         s.value = extra_span.span_click();
+
+
+         this.sp.style.display = (extra_span.on)?'':'none'
+
+          if (extra_span.on) {
+
+            this.sp.style.position = 'absolute';
+
+            this.sp.style.left = 'calc(150px + 50%)';
+
+          }
+
+
+
+      }  
+
+      //else this.frame.innerHTML = `<label>${label}<input type="${type}" value="${value}"/></label>`
+
+      let s = this.frame.querySelector('input');
+
+      if (extra_span.on) {
+         
+         //let a = this.frame.querySelector('span');
+
+         this.sp.style.position = 'absolute';
+
+         this.sp.style.left = 'calc(150px + 50%)';
+      
+       }
+
+       
+
+      s.oninput = (e) => {
+
+        if (extra_span.change_function) {
+        
+          extra_span.change_function();
+
+          this.sp.style.display = (extra_span.on)?'':'none'
+
+          if (extra_span.on) {
+
+            this.sp.style.position = 'absolute';
+
+            this.sp.style.left = 'calc(150px + 50%)';
+
+          }
+        
+        }  
+      
+        if (app.selected_object) app.selected_object.update({evt:'propertyChanged', what:what, value:e.target.value})
+        
+      }
 
   }
 
-
 }
+
+
+
 
 class object_properties_select {
 
-  constructor(app, label){
+
+  constructor(app, label, what, options = [], val = null) {
+
+      this.app = app;
 
       this.frame = document.createElement('div');
  
       this.frame.classList.add('object-properties-select');
 
-      this.frame.innerHTML = `<label>${label}<select></select></label>`
+      let opts = options.map(item =>`<option value=${item.value}>${item.name}</option>`).join();
+
+      this.frame.innerHTML = `<label>${label}<select><options>${opts}</options></select></label>`
+
+      let s = this.frame.querySelector('select');
+
+      if (val!==null) s.value = val;
+
+      s.onchange = (e) => {
+      
+        if (app.selected_object) app.selected_object.update({evt:'propertyChanged', what:what, value:e.target.value})
+        
+      }
+
 
   }
 
@@ -165,13 +261,27 @@ class object_properties_select {
 
 class object_properties_checkbox {
 
- constructor(app, label, initial_value){
+ constructor(app, label, what, initial_value = false){
+
+      this.app = app;    
 
       this.frame = document.createElement('div');
  
       this.frame.classList.add('object-properties-checkbox');
 
       this.frame.innerHTML = `<label>${label}<input type="checkbox" /></label>`
+
+      let s = this.frame.querySelector('input');
+
+      s.checked = initial_value;
+
+      s.onchange = (e) => {
+      
+        if (app.selected_object) app.selected_object.update({evt:'propertyChanged', what:what, value:e.target.checked})
+        
+      }
+
+
 
   }
 
@@ -319,31 +429,55 @@ class epura_list {
     
     }  
 
-    this.current_data = [];
+  
+
+    if (this.date_list_selected.length===0) {
+
+       for (let i =0; i<this.app.sheets.length; i++) {
+
+        for (let j =0; j<this.app.sheets[i].diags.length; j++) {
+
+          this.app.sheets[i].diags[j].current_data = null;
+
+          this.app.sheets[i].diags[j].current_table = null;
+
+          //this.app.sheets[i].diags[j].current_table = null;
+
+
+          this.app.sheets[i].diags[j].render();
+          
+        }
+
+       }
+
+    }
 
     if (this.date_list_selected.length!==0) {
       
       this.current_data = await this.app.datasource.get_epura_data(plot_no, dts);
 
+      this.current_table = await this.app.datasource.get_epura_table(plot_no, dts);
+
+      
+
       for (let i =0; i<this.app.sheets.length; i++) {
 
         for (let j =0; j<this.app.sheets[i].diags.length; j++) {
         
-          //console.log(this.the_diag);
           
-          this.app.sheets[i].diags[j].load_data(this.the_diag.pdiag_plot_no, this.current_data, this.plot_line, this.diagram_list, this.plot_set, this.the_diag.pline_pdiag_no); 
+          this.app.sheets[i].diags[j].load_data(this.the_diag.pdiag_plot_no, this.current_data, this.current_table, this.plot_line, this.diagram_list, this.plot_set, this.the_diag.pline_pdiag_no); 
           
-          
-           //this.app.sheets[i].diags[j];
+          if (this.app.selected_object&&this.app.selected_object.label==='diagram') this.app.object_properties.render('diagram');
+           
         
         }  
         
-        //console.log(this.app.sheets[i])
+       
 
 
       }
 
-      //load_data (epura_no, epura_data_all, slist, dlist, settings, dg_no = 'dummy') 
+     
 
 
     }  
@@ -356,7 +490,7 @@ class epura_list {
 
   async select (num) {
 
-    console.log('select 0');
+    //console.log('select 0');
 
     let ei = this.body.querySelector('.elist-item-selected');
 
@@ -391,12 +525,28 @@ class epura_list {
 
     this.app.sheets.push(new sheet('Лист 1', this.app, true));
 
+    
+
+
+
+    //console.log('app', this.app)
+    
+    this.app.selected_sheet_title.innerHTML = this.app.sheets[0].title; 
+
     this.app.selected_sheet = 0;
 
-    this.app.selected_object = null;
+    //this.app.selected_object = null;
 
+    this.selected_object = this.app.sheets[0];
+
+    this.app.object_properties.render('sheet');
+    
 
     if (num === 0) {
+
+     this.app.selected_object = null; 
+
+     this.app.object_properties.render('none');
  
 
      this.app.frame.querySelector('.excel-main-space').firstChild.innerHTML = '<div style="display: flex; flex: 1;justify-content: center; align-items: center;font-size: 30px;color: gray;">Выберите эпюру</div>';
@@ -412,21 +562,26 @@ class epura_list {
      this.app.sheets = [];
 
 
+
      this.the_diag  = this.diagram_list.find(o=>o.pdiag_plot_no===this.list[num].plot_no);
 
-     //console.log(this.the_diag);
+     //console.log('HELLO',this.diagram_list,this.list[num].plot_no, this.the_diag  )    
+ 
+     this.app.diags = [];
 
+     for (let i =0; i<this.diagram_list.length; i++) {
 
-     //console.log(this.list);
-
-     //console.log(this.diagram_list);
-     
-
-
-
-     //console.log(this)
-
+       if (this.diagram_list[i].pdiag_plot_no === this.list[num].plot_no) this.app.diags.push(this.diagram_list[i]);
     
+
+     }
+
+
+
+     console.log('????',this.app.diags)
+
+
+
 
      this.app.sheets.push(new sheet('Лист 1', this.app, true));
 
@@ -552,6 +707,8 @@ class epura_list {
 
    this.the_diag = null;
 
+   //this.diags = null;
+
   } 
 
 
@@ -561,6 +718,7 @@ class epura_list {
 
 
 class object_properties {
+
 
   render(tpe) {
 
@@ -572,13 +730,238 @@ class object_properties {
 
       this.title.innerText = 'Настройки листа'
 
-      this.body.appendChild((new object_properties_input(this.app, 'Имя листа:')).frame);
+      let dv = document.createElement('div')
 
-      this.body.appendChild((new object_properties_checkbox(this.app, 'Отображать сетку:')).frame);
+      dv.style.position = 'relative'
+
+      this.body.appendChild(dv);
+
+
+      dv.appendChild((new object_properties_input(this.app, 'Имя листа:', 'sheet_name','text', {on:false}, this.app.sheets[this.app.selected_sheet].title)).frame);
+
+      dv.appendChild((new object_properties_checkbox(this.app, 'Отображать сетку:', 'grid_visibility',this.app.sheets[this.app.selected_sheet].grid_visibility )).frame);
+
+    }
+
+    if (tpe==='diagram') {
+
+
+        this.title.innerText = 'Свойства диаграммы'
+
+        let grp = (new object_properties_group(this.app, 'Диаграммы эпюры'))
+
+        let opts = [];
+
+        opts.push({name:'не задана', value:-1});
+
+        for (let i =0; i<this.app.diags.length;i++){
+
+          let oname = (this.app.diags[i].pdiag_objectname)?this.app.diags[i].pdiag_objectname.toString().trim():'';
+
+          let title = (this.app.diags[i].pdiag_title)?this.app.diags[i].pdiag_title.toString().trim():'';
+
+          if (oname === '') oname = 'Объект';
+
+          if (title === '') oname = 'Название';
+
+          opts.push({name:oname+':'+title, value:this.app.diags[i].pdiag_no});
+
+
+        }
+
+          grp.body.appendChild((new object_properties_select(this.app, 'Диаграмма:','diagram_id',opts,this.app.selected_object.diagram_id)).frame);
+
+
+        /*
+grp.body.appendChild((new object_properties_select(this.app, 'Позиция:','legend_position',[{name:'справа',value:'right'},
+
+          {name:'слева',value:'left'},{name:'сверху',value:'top'},{name:'снизу',value:'bottom'}
+
+        */
+
+        //console.log('!!!!!', this.app.selected_object.diagram_list)
+
+
+
+
+
+        this.body.appendChild(grp.frame);
+
+        grp = (new object_properties_group(this.app, 'Ось Х'))
+
+
+        let x_min = (this.app.selected_object.axis_x_min.toString().trim()!=='')?this.app.selected_object.axis_x_min:this.app.selected_object.auto_x_min
+
+        let x_max = (this.app.selected_object.axis_x_max.toString().trim()!=='')?this.app.selected_object.axis_x_max:this.app.selected_object.auto_x_max
+
+        let x_step = (this.app.selected_object.axis_x_step.toString().trim()!=='')?this.app.selected_object.axis_x_step:this.app.selected_object.auto_x_step
+
+        let kk = this.app.selected_object
+
+        let show_auto_x_min = {
+
+          on:(this.app.selected_object.axis_x_min.toString().trim()!=='')?true:false,
+
+          change_function: function() { this.on = true},
+
+          span_click: function(arg = kk) {arg.axis_x_min = '';  arg.render(); this.on = false; return  arg.auto_x_min}  ,
+
+          txt:'авто'
+
+        }
+
+
+         let show_auto_x_max = {
+
+          on:(this.app.selected_object.axis_x_max.toString().trim()!=='')?true:false,
+
+          change_function: function() { this.on = true},
+
+          span_click: function(arg = kk) {arg.axis_x_max = '';  arg.render(); this.on = false; return  arg.auto_x_max}  ,
+
+          txt:'авто'
+
+        }
+
+
+         let show_auto_y_max = {
+
+          on:(this.app.selected_object.axis_y_max.toString().trim()!=='')?true:false,
+
+          change_function: function() { this.on = true},
+
+          span_click: function(arg = kk) {arg.axis_y_max = '';  arg.render(); this.on = false; return  arg.auto_y_max}  ,
+
+          txt:'авто'
+
+        }
+
+
+         let show_auto_y_min = {
+
+          on:(this.app.selected_object.axis_y_min.toString().trim()!=='')?true:false,
+
+          change_function: function() { this.on = true},
+
+          span_click: function(arg = kk) {arg.axis_y_min = '';  arg.render(); this.on = false; return  arg.auto_y_min}  ,
+
+          txt:'авто'
+
+        }
+
+
+        let show_auto_y_step = {
+
+          on:(this.app.selected_object.axis_y_step.toString().trim()!=='')?true:false,
+
+          change_function: function() { this.on = true},
+
+          span_click: function(arg = kk) {arg.axis_y_step = '';  arg.render(); this.on = false; return  arg.auto_y_step}  ,
+
+          txt:'авто'
+
+        }
+
+
+         let show_auto_x_step = {
+
+          on:(this.app.selected_object.axis_x_step.toString().trim()!=='')?true:false,
+
+          change_function: function() { this.on = true},
+
+          span_click: function(arg = kk) {arg.axis_x_step = '';  arg.render(); this.on = false; return  arg.auto_x_step}  ,
+
+          txt:'авто'
+
+        }
+
+
+
+
+
+        grp.body.appendChild((new object_properties_checkbox(this.app, 'Отображать ось:', 'axis_x_visibility', this.app.selected_object.axis_x_visible)).frame);
+
+        grp.body.appendChild((new object_properties_input(this.app, 'Минимум:', 'axis_x_min', 'number', show_auto_x_min, x_min)).frame);
+
+        grp.body.appendChild((new object_properties_input(this.app, 'Максимум:', 'axis_x_max', 'number', show_auto_x_max,x_max)).frame);
+
+        grp.body.appendChild((new object_properties_input(this.app, 'Цена деления:', 'axis_x_step', 'number', show_auto_x_step, x_step )).frame);
+
+        grp.body.appendChild((new object_properties_input(this.app, 'Отметка 1:', 'axis_x_mark1', 'number',{on:false},this.app.selected_object.axis_x_mark1)).frame);
+
+        grp.body.appendChild((new object_properties_input(this.app, 'Отметка 2:', 'axis_x_mark2', 'number',{on:false},this.app.selected_object.axis_x_mark2)).frame);
+
+
+        this.body.appendChild(grp.frame);
+        
+        grp = (new object_properties_group(this.app, 'Ось Y'))
+
+        grp.body.appendChild((new object_properties_checkbox(this.app, 'Отображать ось:', 'axis_y_visibility',this.app.selected_object.axis_y_visible)).frame);
+
+        let y_min = (this.app.selected_object.axis_y_min.toString().trim()!=='')?this.app.selected_object.axis_y_min:this.app.selected_object.auto_y_min
+
+        let y_max = (this.app.selected_object.axis_y_max.toString().trim()!=='')?this.app.selected_object.axis_y_max:this.app.selected_object.auto_y_max
+
+        let y_step = (this.app.selected_object.axis_y_step.toString().trim()!=='')?this.app.selected_object.axis_y_step:this.app.selected_object.auto_y_step
+
+        
+        grp.body.appendChild((new object_properties_input(this.app, 'Минимум:', 'axis_y_min', 'number', show_auto_y_min, y_min)).frame);
+
+        grp.body.appendChild((new object_properties_input(this.app, 'Максимум:', 'axis_y_max', 'number', show_auto_y_max, y_max)).frame);
+
+        grp.body.appendChild((new object_properties_input(this.app, 'Цена деления:', 'axis_y_step', 'number', show_auto_y_step, y_step)).frame);
+
+        grp.body.appendChild((new object_properties_input(this.app, 'Отметка 1:', 'axis_y_mark1', 'number',{on:false},this.app.selected_object.axis_y_mark1)).frame);
+
+        grp.body.appendChild((new object_properties_input(this.app, 'Отметка 2:', 'axis_y_mark2', 'number',{on:false},this.app.selected_object.axis_y_mark2)).frame);
+
+        
+        this.body.appendChild(grp.frame);
+        
+        grp = (new object_properties_group(this.app, 'Координатная сетка'))
+
+        grp.body.appendChild((new object_properties_checkbox(this.app, 'Отображать Х:', 'grid_x_visibility', this.app.selected_object.grid_x_visible)).frame);
+
+        grp.body.appendChild((new object_properties_checkbox(this.app, 'Отображать Y:', 'grid_y_visibility', this.app.selected_object.grid_y_visible)).frame);
+
+        this.body.appendChild(grp.frame);
+
+
+        grp = (new object_properties_group(this.app, 'Легенда'))
+
+        grp.body.appendChild((new object_properties_checkbox(this.app, 'Показывать:', 'legend_visibility', this.app.selected_object.legend.show)).frame);
+
+         grp.body.appendChild((new object_properties_select(this.app, 'Позиция:','legend_position',[{name:'справа',value:'right'},
+
+          {name:'слева',value:'left'},{name:'сверху',value:'top'},{name:'снизу',value:'bottom'}
+
+
+         ],this.app.selected_object.legend.pos)).frame);
+
+
+          this.body.appendChild(grp.frame);
+
+
+         grp = (new object_properties_group(this.app, 'Таблица'))
+
+         grp.body.appendChild((new object_properties_checkbox(this.app, 'Показывать:', 'table_visibility', this.app.selected_object.table.show)).frame);
+
+         grp.body.appendChild((new object_properties_input(this.app, 'Положение:', 'table_pos', 'text',{on:false},this.app.selected_object.table.pos)).frame);
+         
+         grp.body.appendChild((new object_properties_input(this.app, 'Точность:', 'table_pres', 'text',{on:false},this.app.selected_object.table.pres)).frame);
+         
+         
+         this.body.appendChild(grp.frame);
+
+
+
+
+
 
     }
 
     if (tpe ==='cell') {
+      
 
 
 
@@ -587,25 +970,38 @@ class object_properties {
 
       let grp = (new object_properties_group(this.app, 'Шрифт'))
 
-      grp.body.appendChild((new object_properties_select(this.app, 'Название:')).frame);
+      grp.body.appendChild((new object_properties_select(this.app, 'Название:','cell_font',[{name:'Arial',value:'Arial'},{name:'Calibri',value:'Calibri'},
+             {name:'Verdana',value:'Verdana'},{name:'Tahoma',value:'Tahoma'},{name:'Trebuchet MS',value:'Trebuchet MS'},
+             {name:'Times New Roman',value:'Times New Roman'},{name:'Georgia',value:'Georgia'},{name:'Garamond',value:'Garamond'}
+             ,{name:'Courier New',value:'Courier New'}],this.app.selected_object.font.font_name)).frame);
 
-      grp.body.appendChild((new object_properties_select(this.app, 'Размер:')).frame);
+      grp.body.appendChild((new object_properties_select(this.app, 'Размер:','cell_size',[{name:'11',value:'11'},{name:'12',value:'12'}, 
+        {name:'14',value:'14'},{name:'16',value:'16'},{name:'18',value:'18'},{name:'18',value:'18'},
+        {name:'20',value:'20'},{name:'22',value:'22'},{name:'24',value:'24'},{name:'28',value:'28'},
+        ,{name:'36',value:'36'},{name:'48',value:'48'}
+      ],this.app.selected_object.font.font_size)).frame);
 
-      grp.body.appendChild((new object_properties_select(this.app, 'Начертание:')).frame);
+      grp.body.appendChild((new object_properties_select(this.app, 'Начертание:', 'cell_style', [{name:'обычный',value:'plain'}, {name:'курсив', value:'italic'},
 
-      grp.body.appendChild((new object_properties_input(this.app, 'Цвет:', 'color')).frame);
+        {name:'полужирный',value:'bold'}, {name:'полужирный курсив', value:'bolditalic'}
+
+      ],this.app.selected_object.font.font_style)).frame);
+
+      console.log(this.app.selected_object.font.font_color)
+
+      grp.body.appendChild((new object_properties_input(this.app, 'Цвет:', 'cell_color', 'color',{on:false}, this.app.selected_object.font_color)).frame);
     
-
-
 
       this.body.appendChild(grp.frame);
 
 
       let grp2 = (new object_properties_group(this.app, 'Выравнивание'))
 
-      grp2.body.appendChild((new object_properties_select(this.app, 'Вертикальное:')).frame);
+      grp2.body.appendChild((new object_properties_select(this.app, 'Вертикальное:','cell_vert',[{name:'по верхнему краю',value:'top'},
+        {name:'по центру',value:'center'}, {name:'по нижнему краю',value:'bottom'}  ],this.app.selected_object.cell_vert)).frame);
 
-      grp2.body.appendChild((new object_properties_select(this.app, 'Горизонтальное:')).frame);
+      grp2.body.appendChild((new object_properties_select(this.app, 'Горизонтальное:','cell_horz',[{name:'по левому краю',value:'left'},
+        {name:'по центру',value:'center'}, {name:'по правому краю',value:'right'}],this.app.selected_object.cell_horz)).frame);
 
 
       this.body.appendChild(grp2.frame);
@@ -614,9 +1010,10 @@ class object_properties {
 
       let grp3 = (new object_properties_group(this.app, 'Ячейка'))
 
-      grp3.body.appendChild((new object_properties_input(this.app, 'Фон:', 'color')).frame);
+      grp3.body.appendChild((new object_properties_input(this.app, 'Фон:', 'cell_bcolor', 'color',{on:false}, this.app.selected_object.bcolor)).frame);
 
-      grp3.body.appendChild((new object_properties_select(this.app, 'Граница:')).frame);
+      grp3.body.appendChild((new object_properties_select(this.app, 'Граница:', 'cell_border',[{name:'нет',value:false},
+        {name:'есть',value:true}], this.app.selected_object.extra_border)).frame);
 
       this.body.appendChild(grp3.frame);
 
@@ -755,6 +1152,16 @@ class main_divider {
 
  
 
+     this.switch =  document.createElement('div');
+
+     if (tpe==='left') this.switch.classList.add('divider-switch-left');
+     else this.switch.classList.add('divider-switch-right');
+
+     this.switch.onclick = () => this.app.switch(tpe, this.switch);
+
+     this.frame.appendChild(this.switch);
+
+
 
      this.start_size = 0;
 
@@ -778,6 +1185,61 @@ class main_divider {
 
 export class excel_app{
 
+   switch(tpe, sww) {
+
+    if (tpe==='left') {
+
+
+      if (this.epura_list.frame.style.display!=='none') {
+
+        this.epura_list.frame.style.display='none';
+
+        sww.classList.remove('divider-switch-left');
+
+        sww.classList.add('divider-switch-right');
+      
+      }
+      else {
+
+        this.epura_list.frame.style.display='';
+
+        sww.classList.remove('divider-switch-right');
+  
+        sww.classList.add('divider-switch-left');
+
+      
+      }
+
+
+    } else {
+
+     if (this.object_properties.frame.style.display!=='none') {
+
+        this.object_properties.frame.style.display='none';
+
+        sww.classList.remove('divider-switch-right');
+
+        sww.classList.add('divider-switch-left');
+      
+      }
+      else {
+
+        this.object_properties.frame.style.display='';
+
+        sww.classList.remove('divider-switch-left');
+  
+        sww.classList.add('divider-switch-right');
+
+      
+      }
+
+
+
+    }
+
+
+   }
+
    render() {
 
 
@@ -800,21 +1262,57 @@ export class excel_app{
 
     this.popup_menu.render();
 
-    //console.log('MMMMMMMMMMMMMM')
-
-    //this.epura_list.select(0);
-
+    
+    
     this.object_properties.render('cell');
 
+
+
+
+    this.frame.oncontextmenu = (e) =>{
+
+       console.log('here');
+      
+       e.preventDefault(); e.stopPropagation(); 
     
-    this.frame.oncontextmenu = (e) =>{e.preventDefault(); e.stopPropagation(); this.popup_menu.toggle_active(e)}
+    
+    }
                
    }
     
+   subscribe (observer) {
+
+     this.observers.push(observer);
+
+   }
+
+  unsubscribe(observer) {
+  
+    const index = this.observers.indexOf(observer);
+    if (index > -1) {
+      this.observers.splice(index, 1);
+    }
+  
+  }
+
+   notify(data) {
+
+    for (let i =0; i<this.observers.length;i++) {
+
+      if (this.observers[i]&&this.observers[i].update) this.observers[i].update(data);
+
+    }
+   
+   }
     
+
+  
+
    constructor (insertion_point, datasource, mode = 'editor') {    // mode = 'editor'|'viewer'
 
   
+        this.observers = []; 
+
 
         this.datasource = datasource
        
@@ -867,6 +1365,8 @@ export class excel_app{
 
         this.object_properties = new object_properties(this);
 
+
+
         this.main_divider = new main_divider(this, 'right');
 
 
@@ -875,11 +1375,21 @@ export class excel_app{
         main_space_wrapper.appendChild(this.object_properties.frame);
 
 
+        
+
 
         this.frame.appendChild(main_space_wrapper)
 
+         let fp =new footer_panel(this)
 
-        this.frame.appendChild((new footer_panel(this)).frame)
+         this.frame.appendChild(fp.frame)
+
+
+        this.selected_sheet_title = fp.selected_sheet_title;
+
+
+        console.log('fp', fp.selected_sheet_title);
+
 
         this.sheets = [];
 
@@ -890,6 +1400,9 @@ export class excel_app{
         ttt.classList.add('sheet');
 
         tt.appendChild(ttt);
+
+
+        this.diags = [];
 
 
         this.selected_sheet = -1;
