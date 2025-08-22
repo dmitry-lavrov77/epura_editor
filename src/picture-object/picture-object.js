@@ -28,8 +28,6 @@ export class picture_object{
 
       let y = (evt.clientY - f) / d;
 
-   
-
     }
 
 
@@ -98,7 +96,6 @@ export class picture_object{
    
         if (probable_width<=this.width-6) {this.width = probable_width +6; body.style.width=probable_width+6+'px'} 
      
-   
        }
 
 

@@ -590,9 +590,17 @@ class epura_list {
 
      this.app.sheets.push(new sheet('Лист 1', this.app, true));
 
+     this.app.subscribe(this.app.sheets[this.app.sheets.length-1]);
+
+
+
+
+
      this.app.selected_sheet = 0;
 
-     this.app.selected_object = null;
+     this.app.selected_object = this.app.sheets[this.app.sheets.length-1];
+
+     this.app.selected_sheet_title.innerHTML = this.app.sheets[this.app.sheets.length-1].title;
 
      this.app.sheets[this.app.selected_sheet].render();
 
@@ -1287,6 +1295,8 @@ export class excel_app{
     
    subscribe (observer) {
 
+     //console.log('subscribing')
+
      this.observers.push(observer);
 
    }
@@ -1303,6 +1313,8 @@ export class excel_app{
    notify(data) {
 
     for (let i =0; i<this.observers.length;i++) {
+
+      console.log('notify', data)
 
       if (this.observers[i]&&this.observers[i].update) this.observers[i].update(data);
 

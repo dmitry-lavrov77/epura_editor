@@ -258,6 +258,8 @@ export class sheet {
 
    update(data){
 
+      //console.log('update', data)
+
       if (data.evt==='propertyChanged') {
 
         if (data.what==='sheet_name') {
@@ -895,7 +897,9 @@ export class sheet {
         }
 
 
-        excel_app.subscribe(this);
+        //console.log('subscribing')
+
+        //excel_app.subscribe(this);
 
          
          //this.diags.push(new diagram_object(this.app, this));
