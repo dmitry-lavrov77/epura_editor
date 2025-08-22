@@ -50,23 +50,24 @@ export class column {
   
   render () {
 
-     
+    
+     let frame = document.createElement('div');
 
-     this.frame = document.createElement('div');
+     frame.style.minWidth= this.width + 'px'
 
+     frame.style.maxWidth= this.width + 'px'
 
-     this.frame.style.minWidth='64px'
+     frame.style.display='flex'
 
-     this.frame.style.maxWidth='64px'
-
-     this.frame.style.display='flex'
-
-     this.frame.style.flexDirection='column'
+     frame.style.flexDirection='column'
      
      let insertion_point =  this.sheet.frame.querySelector('.sheet');
 
-     insertion_point.appendChild(this.frame);
 
+     if (this.frame) {insertion_point.replaceChild(frame, this.frame); this.frame.remove(); this.frame = frame;}
+     else {this.frame = frame; insertion_point.appendChild(this.frame)}
+
+    
 
      for (let i =0; i<this.sheet.rows.length-1;i++) {
 
@@ -87,8 +88,6 @@ export class column {
   }  
 
   constructor (app, sheet, num, title, width) {
-
-
 
     this.num = num;
 
@@ -436,7 +435,10 @@ export class sheet {
 
      let insertion_point = this.app.frame.querySelector('.excel-main-space')
 
-     this.frame = document.createElement('div');
+
+
+
+     let frame = document.createElement('div');
 
 
      this.measure_text.style.position = 'absolute';
@@ -449,9 +451,9 @@ export class sheet {
 
      this.measure_text.style.whiteSpace = 'nowrap'
 
-     this.frame.appendChild(this.measure_text);
+     frame.appendChild(this.measure_text);
 
-     this.frame.classList.add('sheet-wrapper');
+     frame.classList.add('sheet-wrapper');
 
      let wrapper2 = document.createElement('div');
 
@@ -637,9 +639,9 @@ export class sheet {
 
      row_header_wrapper.appendChild(row_header);
 
-     this.frame.appendChild(row_header_wrapper);
+     frame.appendChild(row_header_wrapper);
 
-     this.frame.appendChild(wrapper2);
+     frame.appendChild(wrapper2);
 
      //row_header.scrollTop = -50;
 
@@ -655,48 +657,33 @@ export class sheet {
     
      }
       
+     if (this.frame) {insertion_point.replaceChild(frame, this.frame); this.frame.remove(); this.frame = frame;}
+     else {this.frame = frame; insertion_point.appendChild(this.frame)}
+
+
+
+     let xmlns = "http://www.w3.org/2000/svg";
+
+     this.connections_layer = document.createElementNS(xmlns, 'svg');
+
+     this.connections_layer.style.width='100%';
+
+     this.connections_layer.style.height='100%';
+
+     this.connections_layer.style.position = 'absolute';
+
+     this.connections_layer.style.pointerEvents = 'none'
+
+     this.connections_layer.style.zIndex = '1000'
+  
+     sh.appendChild(this.connections_layer);
 
      for (let i=0; i<this.columns.length-1;i++) this.columns[i].render();  
 
-  
-     if (insertion_point.firstChild) insertion_point.replaceChild(this.frame, insertion_point.firstChild);
+
      
-     else insertion_point.appendChild(this.frame);
+    
 
-
-        let xmlns = "http://www.w3.org/2000/svg";
-
-        this.connections_layer = document.createElementNS(xmlns, 'svg');
-
-        this.connections_layer.style.width='100%';
-
-        this.connections_layer.style.height='100%';
-
-        this.connections_layer.style.position = 'absolute';
-
-        this.connections_layer.style.pointerEvents = 'none'
-
-        this.connections_layer.style.zIndex = '1000'
-  
-         sh.appendChild(this.connections_layer);
-
-         console.log(this);
-
-        // console.log(this.diags)
-
-         /*let doo = this.diags[0];
-
-         doo.first_render = true;
-
-         console.log('doo', doo)
-
-         let po = this.pictures[0];
-
-         doo.render();
-         
-         po.add_link(doo);
-         
-         po.render();*/
     
    }
 

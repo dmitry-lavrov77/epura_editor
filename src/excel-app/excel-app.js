@@ -549,7 +549,7 @@ class epura_list {
      this.app.object_properties.render('none');
  
 
-     this.app.frame.querySelector('.excel-main-space').firstChild.innerHTML = '<div style="display: flex; flex: 1;justify-content: center; align-items: center;font-size: 30px;color: gray;">Выберите эпюру</div>';
+     this.app.frame.querySelector('.excel-main-space').innerHTML = '<div style="display: flex; flex: 1;justify-content: center; align-items: center;font-size: 30px;color: gray;">Выберите эпюру</div>';
 
      
 
@@ -558,6 +558,11 @@ class epura_list {
 
 
     if (num!==0) {
+
+
+     this.app.frame.querySelector('.excel-main-space').innerHTML = ''; 
+
+      
 
      this.app.sheets = [];
 
