@@ -63,21 +63,27 @@ export class column {
      
      let insertion_point =  this.sheet.frame.querySelector('.sheet');
 
+     if (!document.documentElement.contains(this.frame)) this.frame = null;
 
-     if (this.frame) {insertion_point.replaceChild(frame, this.frame); this.frame.remove(); this.frame = frame;}
+
+     if (this.frame) {
+      
+      insertion_point.replaceChild(frame, this.frame); 
+   
+      this.frame.remove(); 
+   
+      this.frame = frame;
+     
+     }
      else {this.frame = frame; insertion_point.appendChild(this.frame)}
 
     
 
      for (let i =0; i<this.sheet.rows.length-1;i++) {
 
-        let cll = new cell(this.app, this.sheet, this, i);
+       
 
-        this.app.subscribe(cll);
-
-        this.sheet.rows[i].add_cell(cll);
-
-        cll.render();
+         this.sheet.rows[i].cells[this.num].render();
 
 
      }
@@ -100,6 +106,16 @@ export class column {
     this.sheet = sheet;
 
     this.title = title;
+
+    for (let i =0; i<this.sheet.rows.length-1;i++) {
+
+      let cll = new cell(this.app, this.sheet, this, i);
+
+      this.app.subscribe(cll);
+
+      this.sheet.rows[i].add_cell(cll);
+      
+    }
 
   
 
@@ -148,7 +164,7 @@ export class sheet {
    //},
    //});
 
-   //window.addEventListener("pizzaDelivery", (e) => console.log(e.detail.name));
+   
    //window.dispatchEvent(pizzaEvent); 
 
 
@@ -246,7 +262,7 @@ export class sheet {
 
         if (data.what==='sheet_name') {
 
-          console.log('names', this.app.selected_sheet_title,this.title,data.value)
+        
 
           this.title = data.value;
 
@@ -262,20 +278,19 @@ export class sheet {
 
              this.grid_visibility = data.value;
 
-             for (let i =0; i<this.rows.length-1;i++) {
+             /*for (let i =0; i<this.rows.length-1;i++) {
                 
                 for (let j =0; j<this.columns.length-1;j++) {
 
-                 // console.log(this.rows[i].cells[j]) 
                   
                   this.rows[i].cells[j].render();
                 }
 
-             }
+             }*/
 
-            
+        
 
-             //this.render();
+             this.render();
   
         }
 
@@ -292,7 +307,7 @@ export class sheet {
 
           let menu = this.app.popup_menu.frame.querySelector('.menu-popup-context-menu');
 
-          console.log(menu.style.left)
+      
 
 
           
@@ -421,7 +436,6 @@ export class sheet {
 
          }
         
-         //console.log(this.selected_multiple)
 
 
       }
@@ -656,9 +670,14 @@ export class sheet {
     
     
      }
+
+     
       
-     if (this.frame) {insertion_point.replaceChild(frame, this.frame); this.frame.remove(); this.frame = frame;}
+     if (this.frame) {insertion_point.replaceChild(frame, this.frame);  this.frame.remove(); this.frame = frame;}
      else {this.frame = frame; insertion_point.appendChild(this.frame)}
+
+
+
 
 
 
@@ -679,6 +698,7 @@ export class sheet {
      sh.appendChild(this.connections_layer);
 
      for (let i=0; i<this.columns.length-1;i++) this.columns[i].render();  
+     
 
 
      
@@ -785,7 +805,7 @@ export class sheet {
 
        if (obj.label&&obj.label==='diagram') {
 
-         // console.log('diagram');
+       
 
        }
 
@@ -794,7 +814,7 @@ export class sheet {
     
     constructor (title, excel_app, visible = true) {    
 
-        console.log('subscribing sheet')
+  
 
         
 

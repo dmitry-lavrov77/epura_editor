@@ -423,7 +423,7 @@ export class diagram_object{
 
         if (data.what==='table_visibility') {
 
-          console.log('TTTTTTTTTTTTTTT');
+       
 
           this.table.show = data.value;
 
@@ -605,7 +605,7 @@ export class diagram_object{
 
     change_lock_state(e, what) {
 
-      //console.log('what', e, what);
+     
 
       if (what === 'axis_y_mark2_lock') {
 
@@ -1342,7 +1342,6 @@ export class diagram_object{
 
 
 
-            console.log(this.table.table_cells)
 
          for  (let i =0; i< this.table.table_cells.length;i++) {
 
@@ -1358,14 +1357,14 @@ export class diagram_object{
  
          this.table.table_cells = [];
 
-         console.log('URAAA', this.diagram_id);
+      
 
 
          if (this.table.show&&this.current_table&&parseFloat(this.diagram_id)!==-1) {
 
 
 
-           //console.log('URAA2') 
+      
 
            let pos = this.table.pos.split('$');
 
@@ -1406,14 +1405,12 @@ export class diagram_object{
 
                   cell.render()
                   
-                  //console.log(this.sheet.rows[row-1 + parseFloat(this.current_table[i].y)].cells[col - parseFloat(this.current_table[i].x)])
                   
                   //this.sheet.rows[row-1 + parseFloat(this.current_table[i].y)].cells[col - parseFloat(this.current_table[i].x)].value = this.current_table[i].value;
                   
                   //this.sheet.rows[row-1 + parseFloat(this.current_table[i].y)].cells[col - parseFloat(this.current_table[i].x)].render();
                   
-                  //console.log(this.current_table[i])    
-
+              
 
                 }
 
@@ -1422,7 +1419,7 @@ export class diagram_object{
             
            } 
 
-           //else console.log('NO');
+          
           
 
          }  
@@ -1456,7 +1453,6 @@ export class diagram_object{
 
         
 
-        // console.log(this.current_data, this.diagram_id)
 
 
          let cd = this.current_data.find(o=>o.diag_no === parseFloat(this.diagram_id))
@@ -2039,7 +2035,7 @@ export class diagram_object{
         
         let ii = this.app.object_properties.frame.querySelector('.axis_x_max');
 
-        console.log(ii)
+      
 
         ii.value = (this.axis_x_max.toString().trim()!=='')?this.axis_x_max:this.auto_x_max;
 
@@ -2066,7 +2062,7 @@ export class diagram_object{
         
         
         
-        //console.log(ppp)
+  
 
 
        } 
@@ -2300,7 +2296,7 @@ export class diagram_object{
   
       this.current_data = res_data;
 
-      //console.log(this.current_data[0].legends)
+  
 
       this.render();
          
@@ -2360,7 +2356,7 @@ export class diagram_object{
         }
          else if (this.legend.pos === 'top'){
 
-          console.log('top')
+     
 
           this.legend_div.style.top = '5px';
 
@@ -2502,7 +2498,7 @@ export class diagram_object{
         
         }
 
-        ///console.log(this.current_data[0].legends)
+       
 
       } else  this.legend_div.style.display = 'none';
 
@@ -2688,7 +2684,6 @@ export class diagram_object{
 
 
 
-               console.log('YY', clientPoint1.y, clientPoint2.y, this.axis_y_min,this.axis_y_max)
 
 
 
@@ -2777,7 +2772,7 @@ export class diagram_object{
 
       }
 
-      //console.log('@@@', dir, new_size);
+      
 
       return true;
 

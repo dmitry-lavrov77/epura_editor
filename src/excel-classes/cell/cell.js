@@ -9,7 +9,7 @@ export class cell {
 
     render() {
 
-     if (!this.frame) {
+     if (!this.frame||!document.documentElement.contains(this.frame)) {
 
       this.frame = document.createElement('div');
 
@@ -44,7 +44,7 @@ export class cell {
 
 
 
-      //console.log('!!!!',this.column.num, this.num)
+      
      
      }
 
@@ -111,7 +111,7 @@ export class cell {
       
        if (this.value.trim()!==''||this.table_value.trim()) {
 
-       //console.log('111') 
+    
 
        this.sheet.measure_text.style.font = prefix+this.font.font_size+'pt '+this.font.font_name;  
 
@@ -289,8 +289,6 @@ export class cell {
         
         this.frame.style.backgroundColor = this.bcolor.toString()//'rgba(255, 255, 255, 0)';
 
-        //console.log('here')
-
       } 
 
        //if (!this.in_multiple&&!this.selected) this.frame.style.backgroundColor = this.bcolor.toString()+'FF'
@@ -302,8 +300,6 @@ export class cell {
           this.frame.style.borderTop='2px solid black'
           this.frame.style.borderBottom='2px solid black'
           
-
-
 
       }
 
@@ -371,7 +367,7 @@ export class cell {
 
          if (data.what==='cell_color') {
 
-          console.log(data.value)
+       
 
           this.font_color = data.value;
      
@@ -381,7 +377,7 @@ export class cell {
 
          if (data.what==='cell_bcolor') {
 
-          //console.log(data.value)
+     
 
           this.bcolor = data.value;
      
@@ -391,7 +387,7 @@ export class cell {
 
          if (data.what==='cell_border') {
 
-          //console.log(data.value)
+       
 
           this.extra_border = data.value;
      
@@ -402,11 +398,10 @@ export class cell {
 
  
 
-        // console.log(data.what, data.value)
 
         //if (data.what==='')
         
-        //console.log(data.value)
+       
 
 
       } 

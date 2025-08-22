@@ -490,7 +490,7 @@ class epura_list {
 
   async select (num) {
 
-    //console.log('select 0');
+
 
     let ei = this.body.querySelector('.elist-item-selected');
 
@@ -529,13 +529,13 @@ class epura_list {
 
 
 
-    //console.log('app', this.app)
+ 
     
     this.app.selected_sheet_title.innerHTML = this.app.sheets[0].title; 
 
     this.app.selected_sheet = 0;
 
-    //this.app.selected_object = null;
+    
 
     this.selected_object = this.app.sheets[0];
 
@@ -570,7 +570,7 @@ class epura_list {
 
      this.the_diag  = this.diagram_list.find(o=>o.pdiag_plot_no===this.list[num].plot_no);
 
-     //console.log('HELLO',this.diagram_list,this.list[num].plot_no, this.the_diag  )    
+        
  
      this.app.diags = [];
 
@@ -583,7 +583,7 @@ class epura_list {
 
 
 
-     console.log('????',this.app.diags)
+   
 
 
 
@@ -784,7 +784,7 @@ grp.body.appendChild((new object_properties_select(this.app, 'Позиция:','
 
         */
 
-        //console.log('!!!!!', this.app.selected_object.diagram_list)
+       
 
 
 
@@ -992,7 +992,7 @@ grp.body.appendChild((new object_properties_select(this.app, 'Позиция:','
 
       ],this.app.selected_object.font.font_style)).frame);
 
-      console.log(this.app.selected_object.font.font_color)
+    
 
       grp.body.appendChild((new object_properties_input(this.app, 'Цвет:', 'cell_color', 'color',{on:false}, this.app.selected_object.font_color)).frame);
     
@@ -1276,7 +1276,7 @@ export class excel_app{
 
     this.frame.oncontextmenu = (e) =>{
 
-       console.log('here');
+  
       
        e.preventDefault(); e.stopPropagation(); 
     
@@ -1393,7 +1393,7 @@ export class excel_app{
         this.selected_sheet_title = fp.selected_sheet_title;
 
 
-        console.log('fp', fp.selected_sheet_title);
+      
 
 
         this.sheets = [];

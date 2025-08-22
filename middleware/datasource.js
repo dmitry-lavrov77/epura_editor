@@ -27,7 +27,7 @@ async get_diagram_list () {
       let result = await response.json();
 
 
-      console.log(result);
+     
 
 
       return result;
@@ -181,7 +181,7 @@ async get_plot_line () {
 
       let result = await response.json();
 
-      //console.log(result)
+     
 
 
    

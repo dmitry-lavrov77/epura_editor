@@ -241,7 +241,7 @@ export class multicell {
 
          if (data.what==='cell_color') {
 
-          console.log(data.value)
+        
 
           this.font_color = data.value;
      
@@ -251,7 +251,7 @@ export class multicell {
 
          if (data.what==='cell_bcolor') {
 
-          //console.log(data.value)
+  
 
           this.bcolor = data.value;
      
@@ -261,7 +261,7 @@ export class multicell {
 
          if (data.what==='cell_border') {
 
-          //console.log(data.value)
+      
 
           this.extra_border = data.value;
      
@@ -272,11 +272,11 @@ export class multicell {
 
  
 
-        // console.log(data.what, data.value)
+      
 
         //if (data.what==='')
         
-        //console.log(data.value)
+   
 
 
       } 

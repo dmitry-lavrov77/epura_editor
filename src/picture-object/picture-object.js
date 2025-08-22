@@ -28,7 +28,7 @@ export class picture_object{
 
       let y = (evt.clientY - f) / d;
 
-      console.log(x,y);
+   
 
     }
 
