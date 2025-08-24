@@ -8,13 +8,13 @@ export class window_object{
 
        this.action = action;
 
-       this.action_start.left0 = this.left;
+       this.action_start.left0 = this.left*this.app.cscale;
 
-       this.action_start.top0 = this.top;
+       this.action_start.top0 = this.top*this.app.cscale;
 
-       this.action_start.width0 = this.width;
+       this.action_start.width0 = this.width*this.app.cscale;
 
-       this.action_start.height0 = this.height;
+       this.action_start.height0 = this.height*this.app.cscale;
 
        this.action_start.x0 = e.x;
 
@@ -27,14 +27,14 @@ export class window_object{
 
     release (e) {
 
-      this.left = parseFloat(this.frame.style.left);
+      this.left = parseFloat(this.frame.style.left)/this.app.cscale;
 
-      this.top = parseFloat(this.frame.style.top);
+      this.top = parseFloat(this.frame.style.top)/this.app.cscale;;
         
       
-      this.width =  parseFloat(this.frame.style.minWidth);
+      this.width =  parseFloat(this.frame.style.minWidth)/this.app.cscale;
 
-      this.height =  parseFloat(this.frame.style.minHeight);
+      this.height =  parseFloat(this.frame.style.minHeight)/this.app.cscale;
 
       
       this.action = null;  
@@ -43,7 +43,7 @@ export class window_object{
 
       e.target.releasePointerCapture(e.pointerId); 
 
-      this.stop(this.left, this.top, this.width, this.height);
+      this.stop(this.left*this.app.cscale, this.top*this.app.cscale, this.width*this.app.cscale, this.height*this.app.cscale);
 
 
     }
@@ -65,7 +65,7 @@ export class window_object{
 
            this.frame.style.top =  new_y + 'px';
            
-           this.moveing(new_x, new_y, this.width, this.height);
+           this.moveing(new_x, new_y, this.width*this.app.cscale, this.height*this.app.cscale);
 
 
 
@@ -188,22 +188,22 @@ this.after_resizeing();
 
         this.frame.style.position='absolute';
 
-        this.frame.style.left = this.left + 'px';
+        this.frame.style.left = this.left*this.app.cscale + 'px';
 
-        this.frame.style.top = this.top + 'px';
+        this.frame.style.top = this.top*this.app.cscale + 'px';
 
 
 
 
         this.frame.style.zIndex = '100';
 
-        this.frame.style.minWidth = this.width+'px';
+        this.frame.style.minWidth = this.width*this.app.cscale+'px';
 
-        this.frame.style.maxWidth = this.width+'px';
+        this.frame.style.maxWidth = this.width*this.app.cscale+'px';
 
-        this.frame.style.minHeight = this.height+'px';
+        this.frame.style.minHeight = this.height*this.app.cscale+'px';
 
-        this.frame.style.maxHeight = this.height+'px';
+        this.frame.style.maxHeight = this.height*this.app.cscale+'px';
 
         this.frame.style.backgroundColor  = 'white'
 

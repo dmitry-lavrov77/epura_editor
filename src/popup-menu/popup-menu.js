@@ -6,9 +6,24 @@ export class popup_menu {
 
     toggle_active (e, mode) {
 
+
+      //console.log('toggle')
+
       
+       //let insertion_point = this.app.frame.querySelector('.excel-main-space')
+
+       //this.frame = document.createElement('div');
+
+       //this.frame.classList.add('menu-popup');
+
+
+
 
        let menu = this.frame.querySelector('.menu-popup-context-menu');
+
+       //console.log(menu)
+
+      // console.log(menu.parentNode.parentNode)
 
        if (mode&&mode==='merge') {
 
@@ -32,7 +47,8 @@ export class popup_menu {
     render() {
 
 
-        let insertion_point = this.app.frame.querySelector('.excel-main-space')
+        let insertion_point = this.app.frame;
+        //.querySelector('.excel-app')
 
         this.frame = document.createElement('div');
 

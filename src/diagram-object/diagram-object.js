@@ -5,6 +5,11 @@ import './diagram-object.css'
 import '@fortawesome/fontawesome-free/js/all.js';
 
 
+//const template = `
+
+//`
+
+
 var isNumber = function isNumber(str) 
 {
    return !isNaN(str) && !isNaN(parseFloat(str));
@@ -1061,7 +1066,7 @@ export class diagram_object{
 
          body.style.backgroundColor = 'transparent';
 
-          this.wo.frame.style.backgroundColor = 'transparent';
+         this.wo.frame.style.backgroundColor = 'transparent';
          
 
         // let cog = document.createElement('div');
@@ -1206,19 +1211,20 @@ export class diagram_object{
 
         this.container = document.createElement('div');
 
+        this.container.classList.add('container')  
       
 
         this.container.style.position = 'absolute';
 
-        this.container.style.left = this.cleft + 'px';
+        this.container.style.left = this.app.cscale*this.cleft + this.app.cscale*4 - 4 + 'px';
       
-        this.container.style.top = this.ctop + 'px';
+        this.container.style.top = this.app.cscale*this.ctop + 'px';
 
         this.container.style.border = '1px solid gray'
       
-        this.container.style.bottom = this.cbottom + 'px';
+        this.container.style.bottom = this.app.cscale*this.cbottom + 'px';
       
-        this.container.style.right = this.cright +'px';
+        this.container.style.right = this.app.cscale*this.cright - this.app.cscale*4 + 4 +'px';
 
         this.container.style.display='flex';
        
@@ -1668,6 +1674,8 @@ export class diagram_object{
 
          if (this.axis_x_mark1.toString().trim()!=='') {
 
+             console.log('hurra!!!!!!')
+
              let l = document.createElementNS(xmlns, 'line');
 
              l.setAttribute('stroke-width', '1');
@@ -1984,9 +1992,9 @@ export class diagram_object{
          
          
 
-         scale.style.minWidth = (this.axis_y_visible)?(text_length+20).toString() + 'px':'0px';
+         scale.style.minWidth = (this.axis_y_visible)?(this.app.cscale*(text_length+20)).toString() + 'px':'0px';
 
-         scale.style.maxWidth = (this.axis_y_visible)?(text_length+20).toString() + 'px':'0px';
+         scale.style.maxWidth = (this.axis_y_visible)?(this.app.cscale*(text_length+20)).toString() + 'px':'0px';
 
          scale.style.maxHeight = (this.axis_x_visible)?`calc(100% - ${text_height + 10}px)`:'';
 

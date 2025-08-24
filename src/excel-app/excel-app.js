@@ -13,7 +13,201 @@ import './excel-app.css'
 
 class footer_panel {
 
+  //update_tick() {
+
+
+  //}
+
+  do_size_down () {
+
+    if (this.cscale_val - 10 === 100) {
+    
+      this.cscale = 50; 
+
+      this.tick.style.left = this.cscale + '%'
+      
+      this.cscale_val -= 10;
+
+      this.scale_value.innerHTML = this.cscale_val + '%'
+
+       this.app.cscale = 1;
+
+        if (this.app.selected_sheet!==-1) {
+  
+          this.app.sheets[this.app.selected_sheet].render();
+
+
+        }
+
+      return;
+    
+    } 
+
+      if (this.cscale_val - 10 < 100) {
+
+        if (this.cscale_val === 50) return;
+
+      
+        this.cscale = 50 - (100 - this.cscale_val + 10); 
+
+        this.tick.style.left = this.cscale + '%'
+
+        this.cscale_val -= 10;
+
+        this.scale_value.innerHTML = this.cscale_val + '%'
+
+         this.app.cscale = this.cscale_val/100;
+
+        if (this.app.selected_sheet!==-1) {
+  
+          this.app.sheets[this.app.selected_sheet].render();
+
+
+        }
+      
+        return;
+
+
+      
+      
+      }  
+
+      if (this.cscale_val-10>100) {
+
+      this.cscale = 50 + 100*(this.cscale_val - 10 - 100)/400; 
+
+      this.tick.style.left = this.cscale + '%'
+
+      this.cscale_val -= 10;
+
+      this.scale_value.innerHTML = this.cscale_val + '%'
+
+       this.app.cscale = this.cscale_val/100;
+
+        if (this.app.selected_sheet!==-1) {
+  
+          this.app.sheets[this.app.selected_sheet].render();
+
+
+        }
+      
+      return;
+
+    }
+
+
+
+  }
+
+  do_size_up () {
+
+     //console.log (this.app.selected_sheet)
+
+     //console.log (this.app.sheets)
+
+     //console.log (this.app.sheets[this.app.selected_sheet])
+     
+
+
+    if (this.cscale_val + 10 === 100) {
+    
+      this.cscale = 50; 
+
+      this.tick.style.left = this.cscale + '%'
+      
+      this.cscale_val += 10;
+
+      this.scale_value.innerHTML = this.cscale_val + '%'
+
+
+      this.app.cscale = 1
+
+      if (this.app.selected_sheet!==-1) {
+  
+        this.app.sheets[this.app.selected_sheet].render();
+
+
+      }
+
+     
+
+
+      return;
+    
+    } 
+
+
+      if (this.cscale_val + 10 < 100) {
+
+        //if (this.cscale_val === 50) return;
+
+      
+        this.cscale = 50 - (100 - this.cscale_val - 10); 
+
+        this.tick.style.left = this.cscale + '%'
+
+        this.cscale_val += 10;
+
+        this.scale_value.innerHTML = this.cscale_val + '%'
+
+
+        this.app.cscale = this.cscale_val/100;
+
+        if (this.app.selected_sheet!==-1) {
+  
+          this.app.sheets[this.app.selected_sheet].render();
+
+
+        }
+      
+        return;
+
+
+      
+      
+      }  
+
+
+
+
+
+    if (this.cscale_val+10>100) {
+
+      if (this.cscale_val+10>300) return;
+
+      this.cscale = 50 + 100*(this.cscale_val + 10 - 100)/400; 
+
+      this.tick.style.left = this.cscale + '%'
+
+      this.cscale_val += 10;
+
+      this.scale_value.innerHTML = this.cscale_val + '%'
+
+       this.app.cscale = this.cscale_val/100;
+
+        if (this.app.selected_sheet!==-1) {
+  
+          this.app.sheets[this.app.selected_sheet].render();
+
+
+        }
+      
+      return;
+
+    }
+
+    //this.cscale 
+
+
+  }
+
   constructor (app) {
+
+     this.app = app;
+
+     this.cscale = 50;
+
+     this.cscale_val = 100;
     
      this.frame = document.createElement('div');
 
@@ -78,6 +272,8 @@ class footer_panel {
 
      this.size_down.title = 'Уменьшить масштаб'
 
+     this.size_down.onclick = ()=>this.do_size_down();
+
      this.size_up = document.createElement('div');
 
      this.size_up.classList.add('right-bar-icon');
@@ -86,7 +282,31 @@ class footer_panel {
 
      this.size_up.title = 'Увеличить масштаб'
 
+     this.size_up.onclick = ()=>this.do_size_up();
+
+     
+     
+     this.tick =  document.createElement('div');
+     this.tick.style.position ='absolute';
+     this.tick.style.top = '25%';
+     this.tick.style.bottom = '25%';
+     this.tick.style.width = '2px';
+     this.tick.style.left = this.cscale + '%'
+     this.tick.style.backgroundColor = 'black';
+     
+
+
+
+     this.scale_wrapper = document.createElement('div');
+     this.scale_wrapper.style.minWidth = '100px'
+     this.scale_wrapper.style.maxWidth = '100px'
+     this.scale_wrapper.style.height = '100%'
+     this.scale_wrapper.style.position ='relative';
+
+
      this.scale = document.createElement('div');
+
+     this.scale_wrapper.appendChild(this.scale);
 
      this.scale.classList.add('right-bar-scale');
 
@@ -108,11 +328,18 @@ class footer_panel {
 
      this.right_bar.appendChild(this.size_down);
 
-     this.right_bar.appendChild(this.scale);
+     this.right_bar.appendChild(this.scale_wrapper);
 
      this.right_bar.appendChild(this.size_up);
 
      this.right_bar.appendChild(this.scale_value);
+
+     this.scale_wrapper.appendChild(this.tick);
+
+    
+   
+
+
 
      
   }
@@ -543,6 +770,10 @@ class epura_list {
     
 
     if (num === 0) {
+
+     this.app.sheets = [];
+
+     this.app.selected_sheet = -1;
 
      this.app.selected_object = null; 
 
@@ -1257,7 +1488,7 @@ export class excel_app{
 
 
 
-    if (!this.datasource.connected) {
+   if (!this.datasource.connected) {
 
  
          this.datasource.show_connection_window(this.insertion_point, ()=>this.render())
@@ -1314,7 +1545,7 @@ export class excel_app{
 
     for (let i =0; i<this.observers.length;i++) {
 
-      console.log('notify', data)
+     //console.log('notify', data)
 
       if (this.observers[i]&&this.observers[i].update) this.observers[i].update(data);
 
@@ -1401,6 +1632,8 @@ export class excel_app{
 
          this.frame.appendChild(fp.frame)
 
+        
+
 
         this.selected_sheet_title = fp.selected_sheet_title;
 
@@ -1427,8 +1660,12 @@ export class excel_app{
         this.selected_object = null;
 
         this.popup_menu = new popup_menu (this);
+
+        this.cscale = 1;
       
         this.render();  
+
+        //fp.update_tick();
 
     }
 

@@ -53,9 +53,9 @@ export class column {
     
      let frame = document.createElement('div');
 
-     frame.style.minWidth= this.width + 'px'
+     frame.style.minWidth= this.width*this.app.cscale + 'px'
 
-     frame.style.maxWidth= this.width + 'px'
+     frame.style.maxWidth= this.width*this.app.cscale + 'px'
 
      frame.style.display='flex'
 
@@ -139,7 +139,7 @@ export class sheet {
      }
      this.action = action; 
 
-     this.action.start_size = (action.type==='col')?this.columns[action.num].width:this.rows[action.num].height;
+     this.action.start_size = (action.type==='col')?this.columns[action.num].width*this.app.cscale:this.rows[action.num].height*this.app.cscale;
 
      this.action_start.x0 = e.x;
 
@@ -532,9 +532,9 @@ export class sheet {
 
         hh.style.position = 'relative';
 
-        hh.style.minWidth = (this.columns[i].width - 1) + 'px';
+        hh.style.minWidth = (this.columns[i].width*this.app.cscale - 1) + 'px';
 
-        hh.style.maxWidth = (this.columns[i].width - 1) + 'px';
+        hh.style.maxWidth = (this.columns[i].width*this.app.cscale - 1) + 'px';
 
         hh.style.display = 'flex';
 
@@ -608,9 +608,9 @@ export class sheet {
 
         handle.onpointerup=(e)=>this.release(e);
 
-        hh.style.minHeight = this.rows[i].height + 'px';
+        hh.style.minHeight = this.rows[i].height*this.app.cscale + 'px';
 
-        hh.style.maxHeight = this.rows[i].height + 'px';
+        hh.style.maxHeight = this.rows[i].height*this.app.cscale + 'px';
 
         hh.style.position = 'relative';
 
@@ -673,7 +673,6 @@ export class sheet {
     
      }
 
-     
       
      if (this.frame) {insertion_point.replaceChild(frame, this.frame);  this.frame.remove(); this.frame = frame;}
      else {this.frame = frame; insertion_point.appendChild(this.frame)}
@@ -702,8 +701,25 @@ export class sheet {
      for (let i=0; i<this.columns.length-1;i++) this.columns[i].render();  
      
 
+     for (let i =0; i<this.diags.length; i++) {
 
+      console.log('drender')
+
+      this.diags[i].first_render = true;
+      
+      this.diags[i].render() ; 
+   
+     }
+
+
+     for (let i =0; i<this.pictures.length; i++) {
+      
+      this.pictures[i].render() ; 
+   
+     }
+    
      
+    
     
 
     
@@ -878,7 +894,7 @@ export class sheet {
 
         this.selected_multiple =[];
 
-        this.cscale = 1;
+       
 
         for (let i=0; i<this.app.row_names.length;i++){
 

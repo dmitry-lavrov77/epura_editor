@@ -65,9 +65,9 @@ export class cell {
 
      this.frame.style.backgroundColor = this.bcolor.toString() + 'FF';
 
-     this.frame.style.minHeight= parseFloat(this.height)+1 + 'px'
+     this.frame.style.minHeight= parseFloat(this.height*this.app.cscale)+1 + 'px'
 
-     this.frame.style.maxHeight= parseFloat(this.height)+1 + 'px'
+     this.frame.style.maxHeight= parseFloat(this.height*this.app.cscale)+1 + 'px'
 
       
      this.frame.style.borderRight='';
@@ -303,8 +303,8 @@ export class cell {
 
       }
 
-      if (this.in_multiple) this.frame.oncontextmenu = (e) => {e.preventDefault(); e.stopPropagation(); this.app.popup_menu.toggle_active(e, 'merge');}
-      else this.frame.oncontextmenu = (e) =>{ e.preventDefault(); e.stopPropagation();this.app.popup_menu.toggle_active(e, 'add');}
+      if (this.in_multiple) this.frame.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); this.app.popup_menu.toggle_active(e, 'merge');}
+      else this.frame.oncontextmenu = (e) =>{ console.log('in cell'); e.preventDefault(); e.stopPropagation();this.app.popup_menu.toggle_active(e, 'add');}
       
     }
 

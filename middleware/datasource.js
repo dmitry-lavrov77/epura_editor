@@ -1,10 +1,136 @@
 import './datasource.css'
 
+export class PLEDataSource {
+
+
+   async get_diagram_list () {
+
+    let response = await fetch(`${this.path}/bngplotdiagrams.sql`)
+
+    let result = await response.json();
+
+    return result;
+  
+  }
+
+
+
+  async get_plot_list () {
+
+
+      let response = await fetch(`${this.path}/bngplotlists.sql`)
+
+      let result = await response.json();
+
+
+      return result;
+
+  }
+
+
+  async get_plot_set () {
+
+      let response = await fetch(`${this.path}/bngplotsets.sql`)
+
+      let result = await response.json();
+
+
+      return result;
+
+
+  }
+
+
+  async get_plot_line () {
+
+
+      let response = await fetch(`${this.path}/bngplotlines.sql`)
+
+      let result = await response.json();
+
+
+      return result;
+
+ }
+
+
+ async get_epura_table (eid, dates) {
+
+
+    let response = await fetch(`${this.path}/CalcPlotTable.sql?PlotNo=`+eid+`&PlotDates='`+dates+`'`)
+
+    let result = await response.json();
+    
+    return result;
+
+
+
+ }
+
+
+  async get_epura_data (eid, dates) {
+
+      let response = await fetch(`${this.path}/PlotData.sql?PlotNo=`+eid+`&PlotDates='`+dates+`'`)
+
+      let result = await response.json();
+
+      return result;
+
+   
+
+  }
+  
+  
+
+   async get_epura_dates (eid) {
+
+    let response = await fetch(`${this.path}/plot_dates_my.sql?PlotNo=`+eid)
+    
+    let result = await response.json();
+
+    return result;
+
+
+  }
+  
+
+  async get_epura_list () {
+
+     let response = await fetch(`${this.path}/Surgut/bngplots.sql`)
+     
+     let result = await response.json();
+
+     return result;
+
+
+  }
+
+
+   async show_connection_window(insertion_point, funct) { 
+
+    
+
+   }
+
+
+  constructor (url_with_port, database_name) {
+
+     this.path = "https://" + url_with_port + '/' +database_name
+
+     this.connected = true;
+
+  }
+
+
+}
+
 export class DBLDataSource {
 
 
 async get_diagram_list () {
 
+    
+   // let response2 = await fetch()
 
 
     let response = await fetch('https://31.44.94.234:38435/api/kia_data/diagramlist', {

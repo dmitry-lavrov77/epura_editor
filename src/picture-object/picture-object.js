@@ -114,54 +114,45 @@ export class picture_object{
      
      let head = this.wo.frame.querySelector('.window-head');
 
-     let uploader = document.createElement('div');
+     
 
-     let finput = document.createElement('input');
+     this.toolbar.style.position = 'absolute';
 
-     let toolbar = document.createElement('div');
+     this.toolbar.style.right = '3px';
 
-     let linker = document.createElement('div');
+     this.toolbar.style.top = '2px';
 
-     toolbar.style.position = 'absolute';
+     this.toolbar.style.display = 'flex';
 
-     toolbar.style.right = '3px';
+     this.toolbar.style.flexDirection = 'row';
 
-     toolbar.style.top = '2px';
-
-     toolbar.style.display = 'flex';
-
-     toolbar.style.flexDirection = 'row';
+     this.toolbar.classList.add('toolbar');
 
 
-     finput.style.display = 'none';
+     this.finput.style.display = 'none';
 
-     finput.type = 'file';
+     this.finput.type = 'file';
 
-     finput.accept=".svg"; 
+     this.finput.accept=".svg"; 
 
-
-     linker.innerHTML = `<i class="fa fa-link"></i>`
-
-     linker.style.cursor = 'pointer'
-
-     linker.title = 'Привязать диаграмму'
+     this.finput.classList.add('finput');
 
 
+     this.uploader.innerHTML = `<i class="fa fa-upload"></i>`
 
+     this.uploader.style.cursor = 'pointer'
 
-     uploader.innerHTML = `<i class="fa fa-upload"></i>`
+     this.uploader.style.paddingRight='5px'
 
-     uploader.style.cursor = 'pointer'
+     this.uploader.title = 'Загрузить подложку'
 
-     uploader.style.paddingRight='5px'
+     this.uploader.onclick = () => this.finput.click()
 
-     uploader.title = 'Загрузить подложку'
+     this.uploader.classList.add('uploader');
 
-     uploader.onclick = () => finput.click()
+     this.finput.onchange = () =>{
 
-     finput.onchange = () =>{
-
-      var file = finput.files[0];
+      var file = this.finput.files[0];
 
       if (file) {
          
@@ -176,13 +167,38 @@ export class picture_object{
      }
 
 
-     toolbar.appendChild(uploader);
 
-     toolbar.appendChild(linker);
+     let tb = this.toolbar.querySelector('.uploader')
+
+     if (!tb) this.toolbar.appendChild(this.uploader);
+
+
+
+     //tb = this.toolbar.querySelector('.finput')
+
+     //if (tb) tb.remove();
+
+
+
+
      
-     head.appendChild(toolbar);
 
-     head.appendChild(finput);
+     //this.toolbar.appendChild(this.linker);
+
+     //this.head
+     
+
+     tb = head.querySelector('.toolbar')
+
+     if (!tb) head.appendChild(this.toolbar);
+
+     tb = head.querySelector('.finput')
+
+     if (!tb) head.appendChild(this.finput);
+
+     
+
+     
 
      if (this.link) this.draw_link_curve (this.link.wo.left,this.link.wo.top,this.link.wo.width, this.link.wo.height);
 
@@ -246,15 +262,19 @@ export class picture_object{
        if (!this.link) return;
 
 
-        let delta_x = left - this.wo.left;
+        let delta_x = left - this.app.cscale*this.wo.left;
 
-        let delta_y = top - this.wo.top;
+        let delta_y = top - this.app.cscale*this.wo.top;
 
-        this.link.wo.frame.style.left = this.link.wo.left+delta_x + 'px';
+        this.link.wo.frame.style.left = this.app.cscale*(this.link.wo.left)+delta_x + 'px';
 
-        this.link.wo.frame.style.top = this.link.wo.top+delta_y + 'px'; 
+        //this.link.wo.left =this.link.wo.frame.style.left/this.app.cscale
 
-        this.draw_link_curve (this.link.wo.left+delta_x,this.link.wo.top+delta_y,this.link.wo.width, this.link.wo.height)
+        this.link.wo.frame.style.top = this.app.cscale*(this.link.wo.top)+delta_y + 'px'; 
+
+        //this.link.wo.top = this.link.wo.frame.style.top/this.app.cscale
+
+        this.draw_link_curve (this.app.cscale*(this.link.wo.left+delta_x),this.app.cscale*(this.link.wo.top+delta_y),this.app.cscale*this.link.wo.width, this.app.cscale*this.link.wo.height)
 
      }
 
@@ -264,9 +284,9 @@ export class picture_object{
 
        if (!this.link) return;
 
-        this.link.wo.left = parseFloat(this.link.wo.frame.style.left); 
+        this.link.wo.left = parseFloat(this.link.wo.frame.style.left)/this.app.cscale; 
 
-        this.link.wo.top = parseFloat(this.link.wo.frame.style.top); 
+        this.link.wo.top = parseFloat(this.link.wo.frame.style.top)/this.app.cscale; 
 
        
 
@@ -301,6 +321,16 @@ export class picture_object{
        this.wo.stop = (left, top, width, height) => this.stop_all(left, top, width, height);
 
        this.wo.resizeing = (dir, new_size) => {this.draw_link_curve(); return true;}
+
+
+
+       this.uploader = document.createElement('div');
+
+       this.finput = document.createElement('input');
+
+       this.toolbar = document.createElement('div');
+
+       this.linker = document.createElement('div');
 
        
 
